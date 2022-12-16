@@ -15,14 +15,16 @@ export interface ErrorResult {
 
 export type Result<T> = OkResult<T> | ErrorResult;
 
-export async function suppress<T>(fn: () => T | Promise<T>) {
+export async function suppress<T>(
+  callback: () => T | Promise<T>,
+): Promise<Result<T>> {
   try {
-    return <Result<T>> {
+    return {
       type: ResultType.OK,
-      data: await fn(),
+      data: await callback(),
     };
   } catch (error) {
-    return <Result<T>> {
+    return {
       type: ResultType.ERROR,
       message: error.message,
     };
