@@ -1,32 +1,26 @@
+export type Handler<T> = () => T | Promise<T>;
+
 export enum ResultType {
-  OK = "ok",
-  ERROR = "error",
+  SUCCESS = "success",
+  FAILURE = "failure",
 }
 
-export interface OkResult<T> {
-  type: ResultType.OK;
+export interface SuccessResult<T> {
+  type: ResultType.SUCCESS;
   data: T;
 }
 
-export interface ErrorResult {
-  type: ResultType.ERROR;
+export interface FailureResult {
+  type: ResultType.FAILURE;
   message: string;
 }
 
-export type Result<T> = OkResult<T> | ErrorResult;
+export type Result<T> = SuccessResult<T> | FailureResult;
 
-export async function suppress<T>(
-  callback: () => T | Promise<T>,
-): Promise<Result<T>> {
+export async function suppress<T>(handler: Handler<T>): Promise<Result<T>> {
   try {
-    return {
-      type: ResultType.OK,
-      data: await callback(),
-    };
+    return { type: ResultType.SUCCESS, data: await handler() };
   } catch (error) {
-    return {
-      type: ResultType.ERROR,
-      message: error.message,
-    };
+    return { type: ResultType.FAILURE, message: error.message };
   }
 }

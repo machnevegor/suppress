@@ -1,3 +1,3 @@
-If there was no error during execution, `suppress` will return a result of type
-**ok** with returned data. If there was an error, `suppress` will return a
-result of type **error** with the reason.
+The function suppresses errors caused by the `Handler`. If no errors happened
+during the execution, `suppress` will return `SuccessResult`. Otherwise
+`suppress` will return `FailureResult`.
